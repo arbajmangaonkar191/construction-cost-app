@@ -3,34 +3,39 @@ function calculate() {
     let material = Number(document.getElementById("material").value);
     let other = Number(document.getElementById("other").value);
 
-    let total = labour + material + other;
+   let total = Number(document.getElementById("total").innerText.replace(/[^\d]/g, ""));
 
-    document.getElementById("total").innerText = total;
+   document.getElementById("total").innerText = "₹ " + total;
 }
 
 function saveData() {
     let siteName = document.getElementById("siteName").value;
     let total = document.getElementById("total").innerText;
 
-    fetch("http://localhost:5000/save", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            siteName: siteName,
-            totalCost: total
-        })
+   fetch("https://construction-cost-app-1.onrender.com/save", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        siteName: siteName,
+        totalCost: total
     })
-    .then(res => res.json())
-    .then(data => {
-        alert("Data Saved ✅");
-        loadData(); // refresh list
-    });
+})
+.then(res => res.json())
+.then(data => {
+    alert("Saved ✅");
+    loadData();
+});
+
+if (!siteName || total === 0) {
+    alert("Please enter valid data ❌");
+    return;
+}
 }
 
 function loadData() {
-    fetch("http://localhost:5000/sites")
+    fetch("https://construction-cost-app-1.onrender.com/sites")
     .then(res => res.json())
     .then(data => {
         let list = document.getElementById("list");
@@ -54,7 +59,7 @@ function loadData() {
 
 function deleteData(id) {
     if (confirm("Delete this project?")) {
-        fetch(`http://localhost:5000/delete/${id}`, {
+        fetch(`https://construction-cost-app-1.onrender.com/delete/${id}`, {
             method: "DELETE"
         })
         .then(res => res.json())

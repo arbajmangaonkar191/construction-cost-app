@@ -42,4 +42,10 @@ app.delete("/delete/:id", async (req, res) => {
     }
 });
 
+const cors = require("cors");
+
+app.use(cors({
+    origin: "*"
+}));
+
 app.listen(5000, () => console.log("Server running on port 5000"));
