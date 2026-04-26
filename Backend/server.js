@@ -2,11 +2,18 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const sqlite3 = require("sqlite3").verbose();
 const XLSX = require("xlsx");
+const path = require("path");
 
 const app = express();
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
+// PORT FIX (IMPORTANT)
+const PORT = process.env.PORT || 3000;
+
+// DB connect
 const db = new sqlite3.Database("data.db");
 
 // Create table
@@ -19,24 +26,27 @@ db.run(`CREATE TABLE IF NOT EXISTS costs (
     total INTEGER
 )`);
 
-// Home page
+// Home route
 app.get("/", (req, res) => {
     db.all("SELECT * FROM costs", [], (err, rows) => {
+        if (err) return res.send("DB Error");
         res.render("index", { data: rows });
     });
 });
 
-// Add data
+// Add entry
 app.post("/add", (req, res) => {
     const { item, type, qty, rate } = req.body;
     const total = qty * rate;
 
     db.run(
         "INSERT INTO costs (item, type, qty, rate, total) VALUES (?, ?, ?, ?, ?)",
-        [item, type, qty, rate, total]
+        [item, type, qty, rate, total],
+        (err) => {
+            if (err) return res.send("Insert Error");
+            res.redirect("/");
+        }
     );
-
-    res.redirect("/");
 });
 
 // Download Excel
@@ -46,11 +56,14 @@ app.get("/download", (req, res) => {
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Report");
 
-        XLSX.writeFile(wb, "report.xlsx");
-        res.download("report.xlsx");
+        const filePath = "report.xlsx";
+        XLSX.writeFile(wb, filePath);
+
+        res.download(filePath);
     });
 });
 
-app.listen(3000, () => {
-    console.log("Server running on http://localhost:3000");
+// Start server
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
