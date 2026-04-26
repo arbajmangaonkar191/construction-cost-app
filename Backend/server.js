@@ -1,101 +1,56 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
+const bodyParser = require("body-parser");
+const sqlite3 = require("sqlite3").verbose();
 const XLSX = require("xlsx");
 
 const app = express();
-app.use(express.json());
-app.use(cors());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set("view engine", "ejs");
 
-// 🔗 MongoDB connect (yaha apna Atlas URL daalo)
-mongoose.connect("mongodb://arbajmangaonkar191_db_user:Arbaj789@ac-wssyryd-shard-00-00.pexos5y.mongodb.net:27017,ac-wssyryd-shard-00-01.pexos5y.mongodb.net:27017,ac-wssyryd-shard-00-02.pexos5y.mongodb.net:27017/?ssl=true&replicaSet=atlas-binby8-shard-0&authSource=admin&appName=Cluster0")
-.then(()=> console.log("DB Connected"))
-.catch(err => console.log(err));
+const db = new sqlite3.Database("data.db");
 
-// 📦 Schema
-const SiteSchema = new mongoose.Schema({
-    siteName: String,
-    location: String,
-    expenses: [
-        {
-            material: String,
-            quantity: Number,
-            price: Number,
-            labour: Number
-        }
-    ]
-});
+// Create table
+db.run(`CREATE TABLE IF NOT EXISTS costs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    item TEXT,
+    type TEXT,
+    qty INTEGER,
+    rate INTEGER,
+    total INTEGER
+)`);
 
-
-const site = new Site({
-    siteName,
-    location,
-    expenses: expenses && expenses.length > 0 ? expenses : [
-        {
-            material: "Default Material",
-            quantity: 1,
-            price: 100,
-            labour: 50
-        }
-    ]
-});
-
-// ✅ Add Site API
-app.post("/add-site", async (req,res)=>{
-    try {
-        const site = new Site(req.body);
-        await site.save();
-        res.send("Saved Successfully");
-    } catch (err) {
-        res.status(500).send(err);
-    }
-});
-
-// ✅ Get All Sites API (IMPORTANT)
-app.get("/sites", async (req,res)=>{
-    try {
-        const data = await Site.find();
-        res.json(data);
-    } catch (err) {
-        res.status(500).send(err);
-    }
-});
-
-// ✅ Excel Download API (FIXED VERSION)
-app.get("/download", async (req,res)=>{
-    const data = await Site.find();
-
-    let excelData = [];
-
-    data.forEach(site => {
-
-        // 🔥 YAHI LINE ADD KARNA HAI
-        if (!site.expenses || site.expenses.length === 0) return;
-
-        site.expenses.forEach(exp => {
-            excelData.push({
-                SiteName: site.siteName,
-                Location: site.location,
-                Material: exp.material,
-                Quantity: exp.quantity,
-                Price: exp.price,
-                Labour: exp.labour,
-                Total: (exp.quantity * exp.price) + exp.labour
-            });
-        });
+// Home page
+app.get("/", (req, res) => {
+    db.all("SELECT * FROM costs", [], (err, rows) => {
+        res.render("index", { data: rows });
     });
-
-    const worksheet = XLSX.utils.json_to_sheet(excelData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Construction");
-
-    XLSX.writeFile(workbook, "construction_data.xlsx");
-
-    res.download("construction_data.xlsx");
 });
-// 🚀 Server start
-const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// Add data
+app.post("/add", (req, res) => {
+    const { item, type, qty, rate } = req.body;
+    const total = qty * rate;
+
+    db.run(
+        "INSERT INTO costs (item, type, qty, rate, total) VALUES (?, ?, ?, ?, ?)",
+        [item, type, qty, rate, total]
+    );
+
+    res.redirect("/");
+});
+
+// Download Excel
+app.get("/download", (req, res) => {
+    db.all("SELECT * FROM costs", [], (err, rows) => {
+        const ws = XLSX.utils.json_to_sheet(rows);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Report");
+
+        XLSX.writeFile(wb, "report.xlsx");
+        res.download("report.xlsx");
+    });
+});
+
+app.listen(3000, () => {
+    console.log("Server running on http://localhost:3000");
 });
