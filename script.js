@@ -1,4 +1,4 @@
-const BASE_URL = "https://construction-cost-app-1.onrender.com"; // 🔥 change if needed
+const BASE_URL = "https://construction-cost-app-1.onrender.com";
 
 function calculate() {
     let labour = Number(document.getElementById("labour").value);
@@ -11,18 +11,18 @@ function calculate() {
 }
 
 function saveData() {
-    let siteName = document.getElementById("siteName").value;
-    let total = Number(document.getElementById("total").innerText);
+    let data = {
+        siteName: document.getElementById("siteName").value,
+        labour: Number(document.getElementById("labour").value),
+        material: Number(document.getElementById("material").value),
+        other: Number(document.getElementById("other").value),
+        totalCost: document.getElementById("total").innerText
+    };
 
     fetch(`${BASE_URL}/save`, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            siteName: siteName,
-            totalCost: total
-        })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
     })
     .then(res => res.json())
     .then(() => {
@@ -43,55 +43,23 @@ function loadData() {
 
             li.innerHTML = `
                 ${item.siteName} - ₹${item.totalCost}
-                <button onclick="deleteData('${item._id}')">❌</button>
+                <button class="delete" onclick="deleteData('${item._id}')">X</button>
             `;
 
             list.appendChild(li);
         });
     });
-    renderChart(data);
 }
 
 function deleteData(id) {
     fetch(`${BASE_URL}/delete/${id}`, {
         method: "DELETE"
     })
-    .then(() => {
-        alert("Deleted ✅");
-        loadData();
-    });
+    .then(() => loadData());
 }
 
-let chart;
-
-function renderChart(data) {
-    const ctx = document.getElementById("chart").getContext("2d");
-
-    const labels = data.map(d => d.siteName);
-    const values = data.map(d => d.totalCost);
-
-    if (chart) chart.destroy();
-
-    chart = new Chart(ctx, {
-        type: "bar",
-        data: {
-            labels,
-            datasets: [{
-                label: "Project Cost (₹)",
-                data: values
-            }]
-        }
-    });
+function downloadExcel() {
+    window.open(`${BASE_URL}/download`);
 }
 
-function downloadPDF() {
-    const content = document.body.innerText;
-
-    const blob = new Blob([content], { type: "text/plain" });
-    const link = document.createElement("a");
-
-    link.href = URL.createObjectURL(blob);
-    link.download = "invoice.txt";
-    link.click();
-}
 window.onload = loadData;
