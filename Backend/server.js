@@ -26,7 +26,6 @@ const SiteSchema = new mongoose.Schema({
     ]
 });
 
-const { siteName, location, expenses } = req.body;
 
 const site = new Site({
     siteName,
