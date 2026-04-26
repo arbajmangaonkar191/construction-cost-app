@@ -1,41 +1,158 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Zeba Construction</title>
-    <link rel="stylesheet" href="style.css">
+  <title>Construction Manager</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f6f8;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin: 10px 5px;
+      border: none;
+      background: #007bff;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .material-box {
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      background: #fafafa;
+    }
+
+    .total-box {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 18px;
+    }
+  </style>
 </head>
+
 <body>
 
-<header>
-    <h1>🏗 Zeba Construction</h1>
-    <p>Professional Cost Calculator</p>
-</header>
+<h1>🏗️ Construction Cost Manager</h1>
 
 <div class="container">
 
-    <div class="card">
-        <h2>Project Details</h2>
+  <input id="siteName" placeholder="Site Name">
+  <input id="location" placeholder="Location">
 
-        <input id="siteName" placeholder="Site Name">
-        <input id="labour" placeholder="Labour Cost">
-        <input id="material" placeholder="Material Cost">
-        <input id="other" placeholder="Other Cost">
+  <h3>Materials</h3>
+  <div id="materials"></div>
 
-        <button onclick="calculate()">Calculate</button>
+  <button onclick="addMaterial()">➕ Add Material</button>
 
-        <h3>Total: ₹ <span id="total">0</span></h3>
+  <div class="total-box">
+    Total: ₹ <span id="total">0</span>
+  </div>
 
-        <button onclick="saveData()">Save Project</button>
-        <button onclick="downloadExcel()">Download Excel</button>
-    </div>
-
-    <div class="card">
-        <h2>Saved Projects</h2>
-        <ul id="list"></ul>
-    </div>
+  <button onclick="saveData()">💾 Save</button>
+  <button onclick="downloadExcel()">⬇️ Download Excel</button>
 
 </div>
 
-<script src="script.js"></script>
+<script>
+
+let materials = [];
+
+function addMaterial() {
+  const index = materials.length;
+
+  const div = document.createElement("div");
+  div.className = "material-box";
+
+  div.innerHTML = `
+    <input placeholder="Material" id="material-${index}">
+    <input type="number" placeholder="Quantity" id="qty-${index}" oninput="calculateTotal()">
+    <input type="number" placeholder="Price" id="price-${index}" oninput="calculateTotal()">
+    <input type="number" placeholder="Labour" id="labour-${index}" oninput="calculateTotal()">
+  `;
+
+  document.getElementById("materials").appendChild(div);
+  materials.push(index);
+}
+
+function calculateTotal() {
+  let total = 0;
+
+  materials.forEach(i => {
+    let qty = Number(document.getElementById(`qty-${i}`)?.value || 0);
+    let price = Number(document.getElementById(`price-${i}`)?.value || 0);
+    let labour = Number(document.getElementById(`labour-${i}`)?.value || 0);
+
+    total += (qty * price) + labour;
+  });
+
+  document.getElementById("total").innerText = total;
+}
+
+async function saveData() {
+
+  let expenses = [];
+
+  materials.forEach(i => {
+    expenses.push({
+      material: document.getElementById(`material-${i}`).value,
+      quantity: Number(document.getElementById(`qty-${i}`).value),
+      price: Number(document.getElementById(`price-${i}`).value),
+      labour: Number(document.getElementById(`labour-${i}`).value)
+    });
+  });
+
+  const data = {
+    siteName: document.getElementById("siteName").value,
+    location: document.getElementById("location").value,
+    expenses
+  };
+
+  await fetch("http://localhost:5000/add-site", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+
+  alert("Saved Successfully ✅");
+}
+
+function downloadExcel() {
+  window.location = "http://localhost:5000/download";
+}
+
+</script>
+
 </body>
 </html>
