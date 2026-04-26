@@ -1,20 +1,20 @@
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(to right, #eef2f3, #dfe9f3);
+    background: linear-gradient(135deg, #eef2f3, #dfe9f3);
 }
 
 /* HEADER */
 header {
+    text-align: center;
     background: #1e2a38;
     color: white;
-    text-align: center;
     padding: 25px;
 }
 
-.logo {
-    font-size: 28px;
-    font-weight: bold;
+header h1 {
+    margin: 0;
+    font-size: 30px;
 }
 
 /* CONTAINER */
@@ -31,8 +31,8 @@ header {
     background: white;
     padding: 25px;
     width: 320px;
-    border-radius: 12px;
-    box-shadow: 0px 8px 20px rgba(0,0,0,0.1);
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     transition: 0.3s;
 }
 
@@ -45,8 +45,9 @@ input {
     width: 100%;
     padding: 12px;
     margin: 8px 0;
-    border-radius: 6px;
+    border-radius: 8px;
     border: 1px solid #ccc;
+    font-size: 14px;
 }
 
 /* BUTTON */
@@ -55,32 +56,40 @@ button {
     padding: 12px;
     margin-top: 10px;
     border: none;
-    background: #007bff;
-    color: white;
-    border-radius: 6px;
+    border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
+    transition: 0.3s;
 }
 
-button:hover {
+/* BUTTON TYPES */
+.primary {
+    background: #007bff;
+    color: white;
+}
+
+.primary:hover {
     background: #0056b3;
 }
 
-/* SAVE BUTTON */
-.save {
+.success {
     background: #28a745;
+    color: white;
 }
 
-.save:hover {
+.success:hover {
     background: #1e7e34;
 }
 
-/* RESULT */
-.result {
+/* TOTAL BOX */
+.total-box {
     margin-top: 15px;
-    font-size: 20px;
+    padding: 15px;
+    background: #f1f3f5;
+    text-align: center;
+    font-size: 22px;
     font-weight: bold;
-    color: #2c3e50;
+    border-radius: 10px;
 }
 
 /* LIST */
@@ -90,10 +99,27 @@ ul {
 }
 
 li {
-    background: #f1f3f5;
+    background: #f8f9fa;
     padding: 10px;
-    margin: 5px 0;
+    margin: 6px 0;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* DELETE BUTTON */
+li button {
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px 8px;
     border-radius: 6px;
+    cursor: pointer;
+}
+
+li button:hover {
+    background: darkred;
 }
 
 /* FOOTER */
@@ -102,87 +128,13 @@ footer {
     padding: 15px;
     background: #1e2a38;
     color: white;
+    margin-top: 20px;
 }
 
-/* PAGE LOAD ANIMATION */
-body {
-    animation: fadeIn 1s ease-in;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
+/* MOBILE */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
     }
-    to {
-        opacity: 1;
-    }
-}
-
-/* CARD ANIMATION */
-.card {
-    animation: slideUp 0.6s ease;
-}
-
-@keyframes slideUp {
-    from {
-        transform: translateY(30px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-/* BUTTON CLICK EFFECT */
-button:active {
-    transform: scale(0.95);
-}
-
-/* LIST ANIMATION */
-li {
-    animation: fadeItem 0.5s ease;
-}
-
-@keyframes fadeItem {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-header {
-    animation: glow 2s infinite alternate;
-}
-
-@keyframes glow {
-    from {
-        box-shadow: 0 0 5px #3498db;
-    }
-    to {
-        box-shadow: 0 0 20px #3498db;
-    }
-}
-
-li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-li button {
-    background: red;
-    border: none;
-    color: white;
-    padding: 5px 8px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-li button:hover {
-    background: darkred;
 }

@@ -1,48 +1,53 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zeba Construction</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
-    <div class="logo">🏗️ Zeba Construction</div>
-    <p>Professional Site Cost Calculator</p>
+    <h1>🏗️ Zeba Construction</h1>
+    <p>Smart Site Cost Calculator</p>
 </header>
 
 <div class="container">
 
-    <div class="card">
-        <h2>Project Details</h2>
+    <div class="card form-card">
+        <h2>📋 Project Details</h2>
 
-        <input type="text" id="siteName" placeholder="Enter Site Name">
+        <input type="text" id="siteName" placeholder="Site Name">
 
         <input type="number" id="labour" placeholder="Labour Cost (₹)">
         <input type="number" id="material" placeholder="Material Cost (₹)">
         <input type="number" id="other" placeholder="Other Expenses (₹)">
 
-        <button onclick="calculate()">Calculate Total</button>
+        <button onclick="calculate()" class="primary">Calculate</button>
 
-        <div class="result">
-            Total Cost: ₹ <span id="total">0</span>
+        <div class="total-box">
+            ₹ <span id="total">0</span>
         </div>
 
-        <button onclick="saveData()">Save Project</button>
+        <button onclick="saveData()" class="success">Save Project</button>
     </div>
 
-    <div class="card">
-        <h2>Saved Projects</h2>
+    <div class="card list-card">
+        <h2>📊 Saved Projects</h2>
+        <canvas id="chart" height="200"></canvas>
         <ul id="list"></ul>
     </div>
 
 </div>
 
 <footer>
-    © 2026 Zeba Construction | Built by Arbaj
+    © 2026 Zeba Construction | All Rights Reserved
 </footer>
 
 <script src="script.js"></script>
 
+<button onclick="downloadPDF()">Download PDF</button>
 </body>
 </html>
