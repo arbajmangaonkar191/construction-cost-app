@@ -1,0 +1,188 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to right, #eef2f3, #dfe9f3);
+}
+
+/* HEADER */
+header {
+    background: #1e2a38;
+    color: white;
+    text-align: center;
+    padding: 25px;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* CONTAINER */
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 40px;
+    flex-wrap: wrap;
+}
+
+/* CARD */
+.card {
+    background: white;
+    padding: 25px;
+    width: 320px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* INPUT */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* BUTTON */
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+/* SAVE BUTTON */
+.save {
+    background: #28a745;
+}
+
+.save:hover {
+    background: #1e7e34;
+}
+
+/* RESULT */
+.result {
+    margin-top: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+/* LIST */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background: #f1f3f5;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 6px;
+}
+
+/* FOOTER */
+footer {
+    text-align: center;
+    padding: 15px;
+    background: #1e2a38;
+    color: white;
+}
+
+/* PAGE LOAD ANIMATION */
+body {
+    animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* CARD ANIMATION */
+.card {
+    animation: slideUp 0.6s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* BUTTON CLICK EFFECT */
+button:active {
+    transform: scale(0.95);
+}
+
+/* LIST ANIMATION */
+li {
+    animation: fadeItem 0.5s ease;
+}
+
+@keyframes fadeItem {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+header {
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 5px #3498db;
+    }
+    to {
+        box-shadow: 0 0 20px #3498db;
+    }
+}
+
+li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+li button {
+    background: red;
+    border: none;
+    color: white;
+    padding: 5px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+li button:hover {
+    background: darkred;
+}

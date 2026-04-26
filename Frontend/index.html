@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Zeba Construction</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">🏗️ Zeba Construction</div>
+    <p>Professional Site Cost Calculator</p>
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <h2>Project Details</h2>
+
+        <input type="text" id="siteName" placeholder="Enter Site Name">
+
+        <input type="number" id="labour" placeholder="Labour Cost (₹)">
+        <input type="number" id="material" placeholder="Material Cost (₹)">
+        <input type="number" id="other" placeholder="Other Expenses (₹)">
+
+        <button onclick="calculate()">Calculate Total</button>
+
+        <div class="result">
+            Total Cost: ₹ <span id="total">0</span>
+        </div>
+
+        <button class="save" onclick="saveData()">Save Project</button>
+    </div>
+
+    <div class="card">
+        <h2>Saved Projects</h2>
+        <ul id="list"></ul>
+    </div>
+
+</div>
+
+<footer>
+    © 2026 Zeba Construction | Built by Arbaj
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
